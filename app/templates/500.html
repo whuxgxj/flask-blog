@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <div class="wrapper-page shadow-none">
+
+        <div class="ex-page-content text-center">
+            <h1>500</h1>
+            <h2 class="font-light">Internal Server Error.</h2><br>
+            <p>Why not try refreshing your page? or you can contact
+                <a href="#">support</a>
+            </p>
+
+            <a class="btn btn-success m-t-20" href="{{ url_for('main.index') }}">
+                <i class="fa fa-angle-left"></i>
+                Back to Dashboard</a>
+        </div>
+
+    </div>
+
+{% endblock %}

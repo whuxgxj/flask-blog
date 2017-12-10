@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
+    <div class="page-title">
+        <h3 class="title">博客文章总览</h3>
+    </div>
+    <div class="panel">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="m-b-30">
+                        <a href="{{ url_for('admin.add_entry') }}" id="addToTable" class="btn btn-primary waves-effect waves-light">添加
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered table-striped" id="datatable-editable">
+                <thead>
+                    <tr>
+                        <th>文章ID</th>
+                        <th>标题</th>
+                        <th>作者</th>
+                        <th>栏目</th>
+                        <th>浏览次数</th>
+                        <th>创建时间</th>
+                        <th>修改时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in Post.query.all() %}
+                        <tr class="entry_post">
+                            <td>{{ record.id }}</td>
+                            <td>{{ record.title }}</td>
+                            <td>{{ Author.query.get(record.author_id).name }}</td>
+                            <td>{{ Category.query.get(record.category_id).name }}</td>
+                            <td>{{ record.views }}</td>
+                            <td>{{ record.create_time | datetimeformat}}</td>
+                            <td>{{ record.modified_time | datetimeformat}}</td>
+                            <td class="actions">
+                                <a href="{{ url_for('admin.edit_entry',post_id= record.id) }}" class="on-default edit-row">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="{{ url_for('admin.delete_entry',post_id= record.id) }}" class="on-default remove-row">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    {% if posts.pages > 0 %}
+        <div class="row">
+            <main class="col-md-8 main-content">
+                {% for post in posts.items %}
+                    <article class="post well">
+                        <div class="post-head">
+                            <h3 class="post-title">
+                                <a href="{{ url_for('main.post',article_name=post.title) }}">{{ post.title }}</a>
+                            </h3>
+                            <div class="post-meta">
+                                <span class="post-author">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                    <a href="{{ url_for('main.profile',author_id=post.author_id) }}" target="_blank">{{ g.author.query.get(post.author_id).name }}</a>
+                                </span>
+                                <span class="post-read">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                    {{ post.views }}人看过
+                                </span>
+                                <span class="post-date">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    <time datetime="{{ post.create_time }}" title="{{ post.create_time }}">创建于{{ moment(post.create_time).fromNow(refresh=True) }}</time>
+                                </span>
+                                <span class="post-tags">
+                                    <i class="fa fa-tags" aria-hidden="true"></i>
+                                    <a href="{{ url_for('main.tags',tag_id=post.tag_id) }}" class="label label-default">{{ g.tags.query.get(post.tag_id).name }}</a>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- <div class="featured-media"> <a href="/post/laravel-5-5-will-be-the-next-lts-release/"><img src="http://image.golaravel.com/b/60/0540baaed781628b02aac992d1c8f.png" alt="Laravel 5.5 将是下一个 LTS 版本，预计 7/8 月份发布"></a> </div> -->
+                        <div class="post-content">
+                            <p></p>
+                            <p>{{ post.abstract | striptags | escape |  truncate(225)}}</p>
+                            <p></p>
+                        </div>
+                        <div class="post-permalink pull-right">
+                            <a href="{{ url_for('main.post',article_name=post.title) }}" class="btn btn-default">阅读全文</a>
+                        </div>
+                        <footer class="post-footer clearfix"></footer>
+                    </article>
+                {% endfor %}
+                {% if posts.next_num > 0 %}
+                    <article class="post">
+                        <ul class="pager">
+                            {% if posts.has_prev %}
+                                <li class="previous">
+                                    <a href="{{ url_for('main.index', page=posts.prev_num) }} ">Prev</a>
+                                </li>
+                            {% else %}
+                                <li class="previous disabled">
+                                    <a href="#">Prev</a>
+                                </li>
+                            {% endif %}
+                            {% if posts.has_next %}
+                                <li class="next">
+                                    <a href="{{ url_for('main.index', page=posts.next_num) }}">Next</a>
+                                </li>
+                            {% else %}
+                                <li class="next disabled">
+                                    <a href="#">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </article>
+                {% endif %}
+            </main>
+            <aside class="col-md-4 sidebar">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <span>分&emsp;&emsp;&emsp;类</span>
+                        </div>
+                    </div>
+                    <div class="list-group">
+                        {% for tag in g.tags.query.all() %}
+                            {% set count = g.post.query.filter_by(tag_id = tag.id).count() %}
+                            {% if count > 0 %}
+                                <a href="{{ url_for('main.tags',tag_id=tag.id) }}" class="list-group-item">
+                                    {{ tag.name }}
+                                    <span class="badge">{{ count }}</span>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <span>最近的文章</span>
+                        </div>
+                    </div>
+                    <div class="list-group">
+                        {% for late in latest %}
+                            <a href="{{ url_for('main.post',article_name=late.title) }}" class="list-group-item">
+                                <h4 class="list-group-item-heading">{{late.title}}
+                                </h4>
+                                <p class="list-group-item-text">{{ late.abstract | striptags | escape |  truncate(50)}}
+                                </p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
+        </div>
+    {% else %}
+        <p>页面正在建设中</p>
+    {% endif %}
+{% endblock %}

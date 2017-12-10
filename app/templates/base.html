@@ -1,0 +1,133 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='image/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='image/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sticky-footer-navbar.css') }}">
+    <script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+{% endblock %}
+
+{% block navbar %}
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="{{ url_for('static', filename='image/avatar.png') }}" alt="Brand">
+                </a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="{{ url_for('main.index') }}">数据分析</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.military') }}">军事历史</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.football') }}">足球体育</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.about') }}">关于</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="mailto:tomorrow2future@gmail.com">联系</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.rss') }}">订阅</a>
+                    </li>
+                </ul>
+                <!-- <form class="navbar-form navbar-right" action="{{ url_for('main.index') }}" method="post" name="search">{{g.search_form.hidden_tag()}}{{g.search_form.search(size=20)}} </form> -->
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <section class="container">
+        <div class="container">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% block page_content %}{% endblock %}
+        </div>
+    </section>
+    <footer id="main-footer">
+        <div class="container-fluid">
+            <div class="social-share">
+                <ul>
+                    <li>
+                        <a href="https://weibo.com/u/5207524903">
+                            <i class="fa fa-weibo" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.facebook.com/shiyi.jian.3">
+                            <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/tomorrow2future">
+                            <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.quora.com/profile/Shone-Jane">
+                            <i class="fa fa-quora" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="sites-maps">
+                <a href="{{ url_for('main.index') }}">珞珈山下村&nbsp;</a>|&nbsp;<a href="{{ url_for('main.sitemap') }}">网站地图&nbsp;</a>|&nbsp;<a href="{{ url_for('main.about') }}">关于本站</a>&nbsp;|&nbsp;<a href="mailto:tomorrow2future@gmail.com">联系我们</a>
+            </div>
+            <div class="copyright">
+                Powered by
+                <a href="#">flask</a>&nbsp;|&nbsp;2017 &#9426;&nbsp;All rights deserved by&nbsp;
+                <a href="{{ url_for('main.profile',author_id=1) }}">rudy&nbsp;</a>
+            </div>
+        </div>
+    </footer>
+    <a href="#" id="back-to-top" style="display: block;">
+        <i class="fa fa-angle-up"></i>
+    </a>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang("zh-CN") }}
+    <script>
+        var urlstr = location.href; //获取浏览器的url
+        var urlstatus = false; //标记
+        //遍历导航div
+
+        $(".navbar-nav li a").each(function () {
+            //判断导航里面的rel和url地址是否相等
+            if ((urlstr + '/').indexOf($(this).attr('href')) > -1 && $(this).attr('href') != '') {
+                $(this).parent().addClass('active');
+                urlstatus = true;
+            } else {
+                $(this).parent().removeClass('active');
+            }
+        });
+        // 当前样式保持 if (!urlstatus) {     $(".navbar-nav li a").parent().addClass('active'); }
+    </script>
+{% endblock %}

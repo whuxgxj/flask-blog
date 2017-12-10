@@ -1,0 +1,174 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}A copy of velonic{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/bootstrap-reset.css') }}" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}"> -->
+    <!--Animation css-->
+    <!--Icon-fonts css-->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!--Morris Chart CSS -->
+
+    <!-- sweet alerts -->
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin-style.css') }}">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]> <script src="js/html5shiv.js"></script> <script src="js/respond.min.js"></script> <![endif]-->
+{% endblock %}
+
+{% block body %}
+    <!-- Aside Start-->
+    <aside class="left-panel">
+
+        <!-- brand -->
+        <div class="logo">
+            <a href="{{ url_for('admin.index') }}" class="logo-expanded">
+                <i class="fa fa-themeisle" aria-hidden="true"></i>
+                <span class="nav-label">tomorrow</span>
+            </a>
+        </div>
+        <!-- / brand -->
+
+        <!-- Navbar Start -->
+        <nav class="navigation">
+            <ul class="list-unstyled">
+                <li class="active">
+                    <a href="{{ url_for('admin.entry') }}">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <span class="nav-label">文章</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin.author') }}">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <span class="nav-label">作者</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin.user') }}">
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                        <span class="nav-label">用户</span>
+                    </a>
+                </li>
+                <!-- <li class="has-submenu"> <a href="#"> <i class="fa fa-users" aria-hidden="true"></i> <span class="nav-label">角色</span> <i class="fa fa-angle-right menu-arrow" aria-hidden="true"></i> </a> <ul class="list-unstyled"> <li> <a
+                href="ui-typography.html">创建</a> </li> <li> <a href="ui-buttons.html">修改</a> </li> <li> <a href="ui-icons.html">删除</a> </li> <li> <a href="ui-panels.html">创建组</a> </li> </ul> </li> -->
+            </ul>
+        </nav>
+
+    </aside>
+    <!-- Aside Ends-->
+
+    <!--Main Content Start -->
+    <section class="content">
+
+        <!-- Header -->
+        <header class="top-head container-fluid">
+            <button type="button" class="navbar-toggle pull-left">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Search -->
+            <!-- <form role="search" class="navbar-left app-search pull-left hidden-xs"> <input type="text" placeholder="Search..." class="form-control"> <a href=""> <i class="fa fa-search"></i> </a> </form> -->
+
+            <!-- Left navbar -->
+            <nav class=" navbar-default" role="navigation">
+
+                <!-- Right navbar -->
+                <ul class="nav navbar-nav navbar-right top-menu top-right-menu">
+                    <!-- user login dropdown start-->
+                    {% if current_user.is_authenticated %}
+                        <li class="dropdown text-center">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                {% if current_user.avatar %}
+                                    <img alt="" src="data:;base64,{{ g.base64.b64encode(current_user.avatar) }}" class="img-circle profile-img thumb-sm">
+                                {% else %}
+                                    <img alt="" src="{{url_for('static',filename='image/avatar-2.jpg')}}" class="img-circle profile-img thumb-sm">
+                                {% endif %}
+                                <span class="username">{{ current_user.username }}
+                                </span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+                                <!-- <li> <a href="profile.html"> <i class="fa fa-briefcase"></i>个人资料</a> </li> <li> <a href="#"> <i class="fa fa-cog"></i> 设置</a> </li> <li> <a href="#"> <i class="fa fa-bell"></i> Friends <span class="label label-info pull-right mail-info">5</span>
+                                </a> </li> -->
+                                <li>
+                                    <a href="{{ url_for('admin.logout') }}">
+                                        <i class="fa fa-sign-out"></i>
+                                        登出</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="text-center">
+                            <a href="{{ url_for('admin.login') }}">登录</a>
+                        </li>
+                    {% endif %}
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- End right navbar -->
+            </nav>
+
+        </header>
+        <!-- Header Ends -->
+
+        <!-- Page Content Start -->
+        <!-- ================== -->
+
+        <div class="wraper container-fluid">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% block page_content %}{% endblock %}
+        </div>
+        <!-- Page Content Ends -->
+        <!-- ================== -->
+
+        <!-- Footer Start -->
+        <footer class="footer">
+            2017 © tomorrow2future.
+        </footer>
+        <!-- Footer Ends -->
+
+    </section>
+    <!-- Main Content Ends -->
+
+    {% block scripts %}
+        {{ super() }}
+        {{ moment.include_moment() }}
+        {{ moment.lang("zh-CN") }}
+        <!-- <script src="js/modernizr.min.js"></script> -->
+        <!-- <script src="js/pace.min.js"></script> -->
+        <script src="{{ url_for('static',filename = 'js/wow.min.js') }}"></script>
+        <!-- <script src="js/jquery.scrollTo.min.js"></script> -->
+        <script src="{{ url_for('static',filename = 'js/jquery.nicescroll.js') }}"></script>
+        <!-- <script src="{{ url_for('static',filename = 'js/bootstrap-datetimepicker.min.js') }}"></script> -->
+        <script src="{{ url_for('static',filename = 'js/jquery.app.js') }}"></script>
+        <!-- <script type="text/javascript"> // $('#some-textarea').wysihtml5(); $('#timestamp').datetimepicker({language: 'zh', autoclose: true}); </script> -->
+        <script>
+            var urlstr = location.href; //获取浏览器的url
+            var urlstatus = false; //标记
+            //遍历导航div
+
+            $(".navigation ul li a").each(function () {
+                //判断导航里面的rel和url地址是否相等
+                if ((urlstr + '/').indexOf($(this).attr('href')) > -1 && $(this).attr('href') != '') {
+                    $(this).parent().addClass('active');
+                    urlstatus = true;
+                } else {
+                    $(this).parent().removeClass('active');
+                }
+            });
+            // 当前样式保持 if (!urlstatus) {     $(".navbar-nav li a").parent().addClass('active'); }
+        </script>
+    {% endblock %}
+{% endblock %}

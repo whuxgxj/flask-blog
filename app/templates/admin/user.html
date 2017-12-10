@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
+    <div class="page-title">
+        <h3 class="title">用户总计</h3>
+    </div>
+    <div class="panel">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="m-b-30">
+                        <a href="{{ url_for('admin.add_user') }}" id="addToTable" class="btn btn-primary waves-effect waves-light">添加
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered table-striped" id="datatable-editable">
+                <thead>
+                    <tr>
+                        <th>用户ID</th>
+                        <th>用户名</th>
+                        <th>邮箱</th>
+                        <th>头像</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in User.query.all() %}
+                        <tr class="entry_post">
+                            <td>{{ record.id }}</td>
+                            <td>{{ record.username }}</td>
+                            <td>{{ record.email }}</td>
+                            <td>
+                                {% if record.avatar %}
+                                    <img src="data:;base64,{{ base64.b64encode(record.avatar) }}" width="40" height="40"/>
+                                {% else %}
+                                    暂无图像
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                <a href="{{ url_for('admin.edit_user',user_id= record.id) }}" class="on-default edit-row">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="{{ url_for('admin.delete_user',user_id= record.id) }}" class="on-default remove-row">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}

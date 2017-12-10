@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <h1>Search results for "{{query}}":</h1>
+    {% for post in results %}
+        <article class="post well">
+            <div class="post-head">
+                <h3 class="post-title">
+                    <a href="{{ url_for('main.post',article_name=post.title) }}">{{ post.title }}</a>
+                </h3>
+                <div class="post-meta">
+                    <span class="post-author">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <a href="#" target="_blank">{{ g.author.query.get(post.author_id).name }}</a>
+                    </span>
+                    <span class="post-read">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        {{ post.views }}人看过
+                    </span>
+                    <span class="post-date">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                        <time datetime="{{ post.timestamp }}" title="{{ post.timestamp }}">{{ moment(post.timestamp).fromNow(refresh=True) }}</time>
+                    </span>
+                    <span class="post-tags">
+                        <i class="fa fa-tags" aria-hidden="true"></i>
+                        <a href="#" class="label label-default">{{ g.tags.query.get(post.tag_id).name }}</a>
+                    </span>
+                </div>
+            </div>
+            <!-- <div class="featured-media">
+                    <a href="/post/laravel-5-5-will-be-the-next-lts-release/"><img src="http://image.golaravel.com/b/60/0540baaed781628b02aac992d1c8f.png" alt="Laravel 5.5 将是下一个 LTS 版本，预计 7/8 月份发布"></a>
+                </div> -->
+            <div class="post-content">
+                <p></p>
+                <p>{{ post.body_html | striptags | escape |  truncate(225)}}</p>
+                <p></p>
+            </div>
+            <div class="post-permalink pull-right">
+                <a href="{{ url_for('main.post',article_name=post.title) }}" class="btn btn-default">阅读全文</a>
+            </div>
+            <footer class="post-footer clearfix"></footer>
+        </article>
+    {% endfor %}
+{% endblock %}

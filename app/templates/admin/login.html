@@ -1,0 +1,47 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block tiitle %}
+    please login your account
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin-style.css') }}">
+    <link href="{{ url_for('static', filename='css/bootstrap-reset.css') }}" rel="stylesheet">
+
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper-page">
+        <div class="panel panel-color panel-inverse">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+            <div class="panel-heading">
+                <h3 class="text-center m-t-10">
+                    登录到
+                    <strong>Tomorrow</strong>
+                </h3>
+            </div>
+
+            <div class="panel-body">
+                {{ wtf.quick_form(form,form_type="horizontal",horizontal_columns=('xs', 0, 12)) }}
+                <div class="form-group m-t-30">
+                    <div class="col-sm-7">
+                        <a href="pages-recoverpw.html">
+                            <i class="fa fa-lock m-r-5"></i>
+                            忘记密码?</a>
+                    </div>
+                    <div class="col-sm-5 text-right">
+                        <a href="{{ url_for('admin.register') }}">注册</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
